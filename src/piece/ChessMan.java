@@ -6,6 +6,7 @@ import main.GamePanel;
 import pair.Pair;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -22,6 +23,7 @@ public abstract class ChessMan{
     public boolean white;
     public boolean alive;
     public int value;
+    public boolean promotionRequired = false;
     ArrayList<Pair> moves = new ArrayList<>();
     ArrayList<Pair> eats = new ArrayList<>();
     ArrayList<NextMove> nextMoves = new ArrayList<>();
@@ -122,6 +124,10 @@ public abstract class ChessMan{
                         break;
                     }
                 }
+                if (this instanceof Pawn && ((this.i == 0) || (this.i == 7))) {
+                    this.promotionRequired = true;
+                    panel.chessMans.add(promotePawn());
+                }
             }
 
             for (int a = 0; a < 8; a++) {
@@ -153,4 +159,37 @@ public abstract class ChessMan{
             }
         }
     }
+    public ChessMan promotePawn() {
+        String[] options = {"Queen", "Rook", "Bishop", "Knight"};
+
+        int choice = JOptionPane.showOptionDialog(panel.frame,
+                "Chọn quân phong:",
+                "Thăng cấp quân tốt",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                options,
+                options[0]);
+        ChessMan newPiece = null;
+        if (choice >= 0) {
+            switch (choice) {
+                case 0:
+                    newPiece = new Queen(panel, this.x, this.y, white);
+                    break;
+                case 1:
+                    newPiece = new Rook(panel, this.x, this.y, white);
+                    break;
+                case 2:
+                    newPiece = new Bishop(panel, this.x, this.y, white);
+                    break;
+                case 3:
+                    newPiece = new Knight(panel, this.x, this.y, white);
+                    break;
+            }
+        }
+        this.alive = false;
+        panel.Board[i][j] = newPiece.value;
+        return newPiece;
+    }
+
 }

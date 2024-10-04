@@ -35,7 +35,7 @@ public class GamePanel extends Panel {
     Bishop blackBishop2;
     Queen whiteQueen;
     Queen blackQueen;
-    ArrayList<ChessMan> chessMans;
+    public ArrayList<ChessMan> chessMans;
 
     public int turn;
 
